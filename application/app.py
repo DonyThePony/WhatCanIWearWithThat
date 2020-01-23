@@ -34,25 +34,32 @@ def get_colors_from_user_clothes():
     return colors
 
 def get_products_in_type_and_color(item_type, must_match_colors):
-    product_ids = []
+    products = {}
     for product in shop_clothes:
         if shop_clothes[product]['type'] == item_type:
             if set(shop_clothes[product]['colors']).intersection(must_match_colors):
-                product_ids.append(product)
+                products[product] = shop_clothes[product] 
+                products[product]['matchingColors'] = set(shop_clothes[product]['colors']).intersection(must_match_colors)
 
-    return product_ids;
+    return products;
 ##Examlpe: User needs a matching shirt for his nice suite!
 
 
-for requested_item in requested_cloths:
+print("We have following products for you")
 
+for requested_item in requested_cloths:
+    
     #Get all the product types which have to match with the requested item
     must_match_items = get_must_match_items(requested_item)
-    print("must_match_items: " + str(must_match_items))
 
     #Define all Colors from user_clothes
     must_match_colors = get_colors_from_user_clothes() 
-    print('must_match_colors: ' + str(must_match_colors))
 
     available_products_in_type_and_color = get_products_in_type_and_color(requested_item, must_match_colors)
-    print("available_products_in_type_and_color: " + str(available_products_in_type_and_color))
+
+    for product_id in available_products_in_type_and_color:
+        product = available_products_in_type_and_color[product_id]
+        print("- " + product['type'] + " ID: " + product_id)
+        print("- - Colors: ")
+        for color in product['matchingColors']:
+            print("- - - " + color)
